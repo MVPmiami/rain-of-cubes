@@ -55,7 +55,7 @@ public class RainSpawner : MonoBehaviour
             cube.SetColorChangeStatus(true);
         }
 
-        StartCoroutine(DeleteCubeByDelay(cube, cubeliveTime));
+        StartCoroutine(ReturnToPool(cube, cubeliveTime));
     }
 
     private void ActionOnGet(GameObject obj)
@@ -69,7 +69,7 @@ public class RainSpawner : MonoBehaviour
         _pool.Get();
     }
 
-    private IEnumerator DeleteCubeByDelay(Cube cube, float delay)
+    private IEnumerator ReturnToPool(Cube cube, float delay)
     {
         yield return new WaitForSeconds(delay);
 
