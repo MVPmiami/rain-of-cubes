@@ -6,7 +6,7 @@ public class CubeTrigger : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.rigidbody.TryGetComponent(out Cube cube))
+        if (collision.gameObject.TryGetComponent(out Cube cube))
             _rainSpawner.DestroyCube(cube);
     }
 }

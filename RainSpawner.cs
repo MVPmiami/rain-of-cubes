@@ -5,25 +5,19 @@ using UnityEngine.Pool;
 public class RainSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject _cubePrefub;
+    [SerializeField, Range(-20, 0)] private int _minOffset;
+    [SerializeField, Range(0, 20)] private int _maxOffset;
+    [SerializeField, Range(20, 50)] private int _yOffset;
+    [SerializeField, Range(0.01f, 10)] private float _repeatRate;
+    [SerializeField, Range(1, 5000)] private int _poolCapacity;
+    [SerializeField, Range(1, 5000)] private int _poolMaxSize;
 
     private float _minLiveTime;
     private float _maxLiveTime;
-    private int _minOffset;
-    private int _maxOffset;
-    private int _yOffset;
-    private float _repeatRate;
-    private int _poolCapacity;
-    private int _poolMaxSize;
     private ObjectPool<GameObject> _pool;
 
     private void Awake()
     {
-        _minOffset = -20;
-        _maxOffset = 20;
-        _yOffset = 25;
-        _poolCapacity = 5000;
-        _poolMaxSize = 5000;
-        _repeatRate = 0.01f;
         _pool = new ObjectPool<GameObject>(
             createFunc: () => Instantiate(_cubePrefub),
             actionOnGet: (obj) => ActionOnGet(obj),
@@ -46,14 +40,6 @@ public class RainSpawner : MonoBehaviour
     public void DestroyCube(Cube cube)
     {
         float cubeliveTime = UnityEngine.Random.Range(_minLiveTime, _maxLiveTime);
-
-        if (!cube.IsColorChanged)
-        {
-            Renderer renderer = cube.GetComponent<Renderer>();
-            Color _color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), 1f);
-            renderer.material.SetColor("_Color", _color);
-            cube.SetColorChangeStatus(true);
-        }
 
         StartCoroutine(ReturnToPool(cube, cubeliveTime));
     }
