@@ -4,7 +4,7 @@ using UnityEngine.Pool;
 
 public class RainSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject _cubePrefub;
+    [SerializeField] private Cube _cubePrefub;
     [SerializeField, Range(-20, 0)] private int _minOffset;
     [SerializeField, Range(0, 20)] private int _maxOffset;
     [SerializeField, Range(20, 50)] private int _yOffset;
@@ -14,15 +14,15 @@ public class RainSpawner : MonoBehaviour
 
     private float _minLiveTime;
     private float _maxLiveTime;
-    private ObjectPool<GameObject> _pool;
+    private ObjectPool<Cube> _pool;
 
     private void Awake()
     {
-        _pool = new ObjectPool<GameObject>(
+        _pool = new ObjectPool<Cube>(
             createFunc: () => Instantiate(_cubePrefub),
-            actionOnGet: (obj) => ActionOnGet(obj),
-            actionOnRelease: (obj) => obj.SetActive(false),
-            actionOnDestroy: (obj) => Destroy(obj),
+            actionOnGet: (cube) => ActionOnGet(cube),
+            actionOnRelease: (cube) => cube.gameObject.SetActive(false),
+            actionOnDestroy: (cube) => Destroy(cube),
             collectionCheck: true,
             defaultCapacity: _poolCapacity,
             maxSize: _poolMaxSize
@@ -39,14 +39,15 @@ public class RainSpawner : MonoBehaviour
 
     public void DestroyCube(Cube cube)
     {
-        float cubeliveTime = UnityEngine.Random.Range(_minLiveTime, _maxLiveTime);
+        float cubeliveTime = Random.Range(_minLiveTime, _maxLiveTime);
 
         StartCoroutine(ReturnToPool(cube, cubeliveTime));
     }
 
-    private void ActionOnGet(GameObject obj)
+    private void ActionOnGet(Cube cube)
     {
-        obj.transform.position = new Vector3(UnityEngine.Random.Range(_minOffset, _maxOffset), transform.position.y + _yOffset, UnityEngine.Random.Range(_minOffset, _maxOffset));
+        GameObject obj = cube.gameObject;
+        obj.transform.position = new Vector3(Random.Range(_minOffset, _maxOffset), transform.position.y + _yOffset, Random.Range(_minOffset, _maxOffset));
         obj.SetActive(true);
     }
 

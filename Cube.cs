@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
+    private const string Color = "_Color";
+
     private bool _isColorChanged;
 
     private void Start()
@@ -11,12 +13,12 @@ public class Cube : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent(out Platform platform) && !this._isColorChanged)
+        if (!_isColorChanged && collision.gameObject.TryGetComponent(out Platform platform))
         {
-            Renderer renderer = this.GetComponent<Renderer>();
-            Color _color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), 1f);
-            renderer.material.SetColor("_Color", _color);
-            this._isColorChanged = true;
+            Renderer renderer = GetComponent<Renderer>();
+            Color _color = Random.ColorHSV();
+            renderer.material.SetColor(Color, _color);
+            _isColorChanged = true;
         }
     }
 }
